@@ -18,7 +18,7 @@ type Config struct {
 	Root string `env:"FIBER_HTTP_ROOT"`
 }
 
-var Version string = "0.3.1"
+var Version string = "0.3.4"
 
 var err error
 
@@ -47,7 +47,7 @@ func main() {
 	if Cfg.Root == "" {
 		Cfg.Root = "./www"
 	}
-	fmt.Fprintf(os.Stderr, "lvl=info, message=\"Starting Fiber HTTP v%s\", root=\"%s\", port=%s\n", Version, Cfg.Root, Cfg.Port)
+	fmt.Fprintf(os.Stderr, "lvl=info message=\"Starting Fiber HTTP v%s\" root=\"%s\" port=%s\n", Version, Cfg.Root, Cfg.Port)
 
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
@@ -55,7 +55,7 @@ func main() {
 		EnablePrintRoutes:     false,
 	})
 	app.Use(logger.New(logger.Config{
-		Format: "lvl=info, status=${status}, latency=${latency}, ip=${ip} method=${method}, path=${path}\n",
+		Format: "lvl=info status=${status} latency=${latency} ip=${reqHeader:X-Real-Ip} method=${method} path=${path}\n",
 	}))
 	app.Use(cache.New(cache.Config{
 		Expiration: 10 * time.Minute,
